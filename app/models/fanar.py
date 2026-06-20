@@ -1,21 +1,21 @@
 from openai import OpenAI
-from app.config import FANAR_API_KEY, FANAR_API_BASE, FANAR_MODEL
+from app import config
 
 
 class FanarClient:
     """OpenAI-compatible client for Fanar API."""
 
     def __init__(self):
-        if not FANAR_API_KEY:
+        if not config.FANAR_API_KEY:
             raise ValueError(
                 "FANAR_API_KEY is not set. "
                 "Set it in .env or as an environment variable."
             )
         self.client = OpenAI(
-            base_url=FANAR_API_BASE,
-            api_key=FANAR_API_KEY,
+            base_url=config.FANAR_API_BASE,
+            api_key=config.FANAR_API_KEY,
         )
-        self.model = FANAR_MODEL
+        self.model = config.FANAR_MODEL
 
     def generate(
         self,

@@ -9,16 +9,16 @@ import json
 import numpy as np
 import faiss
 from typing import Optional
-from app.config import EMBEDDING_DIM
+from app import config
 
 
 class FaissIndexManager:
     """Manages a single FAISS index for one account."""
 
-    def __init__(self, account: str, indices_dir: str, dim: int = EMBEDDING_DIM):
+    def __init__(self, account: str, indices_dir: str, dim: int = None):
         self.account = account
         self.indices_dir = indices_dir
-        self.dim = dim
+        self.dim = dim if dim is not None else config.EMBEDDING_DIM
         self.index_path = os.path.join(indices_dir, f"{account}.faiss")
         self.meta_path = os.path.join(indices_dir, f"{account}_meta.json")
 

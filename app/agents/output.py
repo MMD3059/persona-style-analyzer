@@ -7,7 +7,7 @@ Saves style profiles to JSON and prepares API responses.
 import json
 import os
 from datetime import datetime
-from app.config import PROFILES_DIR
+from app import config
 
 
 def output_node(state: dict) -> dict:
@@ -22,8 +22,8 @@ def output_node(state: dict) -> dict:
     }
 
     if profile:
-        os.makedirs(PROFILES_DIR, exist_ok=True)
-        profile_path = os.path.join(PROFILES_DIR, f"{account}.json")
+        os.makedirs(config.PROFILES_DIR, exist_ok=True)
+        profile_path = os.path.join(config.PROFILES_DIR, f"{account}.json")
 
         profile_dict = profile.model_dump(mode="json")
         profile_dict["extraction_confidence"] = state.get("extraction_confidence", 0.0)

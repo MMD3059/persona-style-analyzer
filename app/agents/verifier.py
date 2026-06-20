@@ -6,7 +6,7 @@ account's learned style.
 """
 
 import numpy as np
-from app.config import INDICES_DIR
+from app import config
 from app.db.faiss_index import FaissIndexManager
 
 
@@ -27,7 +27,7 @@ def verifier_node(state: dict) -> dict:
         }
 
     try:
-        index_manager = FaissIndexManager(account, INDICES_DIR)
+        index_manager = FaissIndexManager(account, config.INDICES_DIR)
 
         if not index_manager.index_exists():
             return {

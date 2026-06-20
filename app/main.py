@@ -12,7 +12,7 @@ from app.models.schemas import (
     StyleProfile,
 )
 from app.graph.workflow import run_extraction, run_generation, run_verification
-from app.config import PROFILES_DIR, INDICES_DIR
+from app import config
 import os
 import json
 
@@ -81,7 +81,7 @@ async def verify_text(req: VerificationRequest):
 async def generate_text(req: GenerationRequest):
     """Generate text in an account's style."""
     # Load profile if exists
-    profile_path = os.path.join(PROFILES_DIR, f"{req.account}.json")
+    profile_path = os.path.join(config.PROFILES_DIR, f"{req.account}.json")
     profile = None
     if os.path.exists(profile_path):
         with open(profile_path, "r", encoding="utf-8") as f:
@@ -100,11 +100,11 @@ async def generate_text(req: GenerationRequest):
 @app.get("/profiles")
 async def list_profiles():
     """List all saved style profiles."""
-    os.makedirs(PROFILES_DIR, exist_ok=True)
+    os.makedirs(config.PROFILES_DIR, exist_ok=True)
     profiles = []
-    for fname in os.listdir(PROFILES_DIR):
+    for fname in os.listdir(config.PROFILES_DIR):
         if fname.endswith(".json"):
-            path = os.path.join(PROFILES_DIR, fname)
+            path = os.path.join(config.PROFILES_DIR, fname)
             with open(path, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 profiles.append({
@@ -118,7 +118,7 @@ async def list_profiles():
 @app.get("/profiles/{account}")
 async def get_profile(account: str):
     """Get a specific account's style profile."""
-    path = os.path.join(PROFILES_DIR, f"{account}.json")
+    path = os.path.join(config.PROFILES_DIR, f"{account}.json")
     if not os.path.exists(path):
         raise HTTPException(status_code=404, detail=f"Profile for '{account}' not found")
     with open(path, "r", encoding="utf-8") as f:
@@ -128,12 +128,12 @@ async def get_profile(account: str):
 @app.get("/indices")
 async def list_indices():
     """List all FAISS indices."""
-    os.makedirs(INDICES_DIR, exist_ok=True)
+    os.makedirs(config.INDICES_DIR, exist_ok=True)
     indices = []
-    for fname in os.listdir(INDICES_DIR):
+    for fname in os.listdir(config.INDICES_DIR):
         if fname.endswith(".faiss"):
             account = fname.replace(".faiss", "")
-            meta_path = os.path.join(INDICES_DIR, f"{account}_meta.json")
+            meta_path = os.path.join(config.INDICES_DIR, f"{account}_meta.json")
             size = 0
             if os.path.exists(meta_path):
                 with open(meta_path, "r", encoding="utf-8") as f:
