@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, field_validator
+from typing import Optional, Any
 from datetime import datetime
 
 
@@ -25,8 +25,8 @@ class ToneProfile(BaseModel):
     formality: float = Field(default=0.5, ge=0.0, le=1.0)
     sentiment: str = "neutral"
     emotional_range: list[str] = Field(default_factory=list)
-    punctuation_style: Optional[str] = None
-    emoji_usage: Optional[str] = None
+    punctuation_style: Any = None
+    emoji_usage: Any = None
 
 
 class BeliefProfile(BaseModel):

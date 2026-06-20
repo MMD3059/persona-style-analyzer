@@ -80,8 +80,11 @@ def style_extractor_node(state: dict) -> dict:
         # Clean response - remove markdown fences if present
         response = response.strip()
         if response.startswith("```"):
-            response = response.split("\n", 1)[1]
-            response = response.rsplit("```", 1)[0]
+            # Handle ```json, ```, etc.
+            first_newline = response.find("\n")
+            if first_newline != -1:
+                response = response[first_newline + 1:]
+            response = response.rsplit("```", 1)[0] if "```" in response else response
         response = response.strip()
 
         profile_data = json.loads(response)
